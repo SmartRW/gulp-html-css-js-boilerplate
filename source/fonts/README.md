@@ -1,1 +1,1 @@
-Put your fonts filed here
+Папка для шрифтов.

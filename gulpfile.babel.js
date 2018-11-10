@@ -1,21 +1,21 @@
-import gulp from 'gulp';
-import sass from 'gulp-sass';
-import plumber from 'gulp-plumber';
-import postcss from 'gulp-postcss';
-import autoprefixer from 'autoprefixer';
-import browserSync from 'browser-sync';
-import imagemin from 'gulp-imagemin';
-import webp from 'gulp-webp';
-import csso from 'gulp-csso';
-import rename from 'gulp-rename';
-import svgstore from 'gulp-svgstore';
-import posthtml from 'gulp-posthtml';
-import include from 'posthtml-include';
-import del from 'del';
-import htmlmin from 'gulp-htmlmin';
-import jsmin from 'gulp-uglify';
-import babel from 'gulp-babel';
-import concat from 'gulp-concat';
+import gulp from 'gulp'; // сам сборщик
+import sass from 'gulp-sass'; // sass препроцессор
+import plumber from 'gulp-plumber'; // отслеживает ошибки, продолжает выполнение потока в случае ошибки
+import postcss from 'gulp-postcss'; // плагин для парсинга css
+import autoprefixer from 'autoprefixer'; // автопрефексер, работает в потоке postcss
+import browserSync from 'browser-sync'; // автоматически перезагружает страницу
+import imagemin from 'gulp-imagemin'; // сжатие графики без потерь
+import webp from 'gulp-webp'; // конвертирует графику в формат webp
+import csso from 'gulp-csso'; // минификатор css
+import rename from 'gulp-rename'; // плагин для переименования файлов
+import svgstore from 'gulp-svgstore'; // сборщик спрайтов
+import posthtml from 'gulp-posthtml'; // парсер HTML
+import include from 'posthtml-include'; // плагин для posthtml, позволяет использовать <include> в HTML
+import del from 'del'; // плагин для удаления файлов/папок
+import htmlmin from 'gulp-htmlmin'; // минификатор HTML
+import jsmin from 'gulp-uglify'; // минификатор JS
+import babel from 'gulp-babel'; // транспайлер для js, переписывает скрипты, написанные на современном синтаксисе JavaScrypt, в синтаксис ES5 для совместимости со старыми браузерами
+import concat from 'gulp-concat'; // плагин для объединения файлов
 
 const server = browserSync.create();
 
@@ -54,7 +54,7 @@ gulp.task('server', () => {
   });
 
   gulp.watch('source/sass/**/*.{scss,sass}', gulp.series('css'));
-  gulp.watch('source/img/sprite-*.svg', gulp.series('sprite', 'html', 'refresh'));
+  gulp.watch('source/img/sprite/*.svg', gulp.series('sprite', 'html', 'refresh'));
   gulp.watch('source/*.html', gulp.series('html', 'refresh'));
   gulp.watch('source/js/*.js', gulp.series('js', 'refresh'));
 });
@@ -65,13 +65,13 @@ gulp.task('images', () => gulp.src('source/img/source/*.{png,jpg,svg}')
     imagemin.jpegtran({ progressive: true }),
     imagemin.svgo(),
   ]))
-  .pipe(gulp.dest('source/img')));
+  .pipe(gulp.dest('build/img')));
 
 gulp.task('webp', () => gulp.src('source/img/*.{png,jpg}')
   .pipe(webp({ quality: 90 }))
   .pipe(gulp.dest('source')));
 
-gulp.task('sprite', () => gulp.src('source/img/sprite-*.svg')
+gulp.task('sprite', () => gulp.src('source/img/sprite/*.svg')
   .pipe(svgstore({ inlineSvg: true }))
   .pipe(rename('sprite.svg'))
   .pipe(gulp.dest('build/img')));
@@ -94,6 +94,6 @@ gulp.task('js', () => gulp.src('source/js/**/*.js')
   .pipe(jsmin())
   .pipe(gulp.dest('build/js')));
 
-gulp.task('build', gulp.series('clean', 'copy', 'css', 'sprite', 'html', 'js', 'images'));
+gulp.task('start', gulp.series('clean', 'copy', 'css', 'sprite', 'html', 'js', 'server'));
 
-gulp.task('start', gulp.series('build', 'server'));
+gulp.task('build', gulp.series('clean', 'copy', 'css', 'sprite', 'html', 'js', 'images', 'server'));
