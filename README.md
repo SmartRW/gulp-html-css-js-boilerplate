@@ -8,7 +8,7 @@
 
 Структура проекта:
 
-`
+```
 | build/
   |-- css/
   |-- fonts/
@@ -43,7 +43,7 @@
 | .stylelintrc
 | gulpfile.babel.js
 | package.json
-`
+```
 
 Режим разработки запускается командой
 
