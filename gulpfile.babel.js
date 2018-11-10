@@ -21,7 +21,7 @@ const server = browserSync.create();
 
 gulp.task('copy', () => gulp.src([
   'source/fonts/**/*.{woff,woff2}',
-  'source/img/**',
+  'source/img/*', '!source/img/sprite',
 ], {
   base: 'source',
 })
