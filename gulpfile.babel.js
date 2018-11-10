@@ -11,6 +11,7 @@ import rename from 'gulp-rename'; // плагин для переименова�
 import svgstore from 'gulp-svgstore'; // сборщик спрайтов
 import posthtml from 'gulp-posthtml'; // парсер HTML
 import include from 'posthtml-include'; // плагин для posthtml, позволяет использовать <include> в HTML
+import w3cjs from 'gulp-w3cjs'; // валидатор HTML
 import del from 'del'; // плагин для удаления файлов/папок
 import htmlmin from 'gulp-htmlmin'; // минификатор HTML
 import jsmin from 'gulp-uglify'; // минификатор JS
@@ -59,7 +60,7 @@ gulp.task('server', () => {
   gulp.watch('source/js/*.js', gulp.series('js', 'refresh'));
 });
 
-gulp.task('images', () => gulp.src('source/img/source/*.{png,jpg,svg}')
+gulp.task('images', () => gulp.src('source/img/*.{png,jpg,svg}')
   .pipe(imagemin([
     imagemin.optipng({ optimizationLevel: 3 }),
     imagemin.jpegtran({ progressive: true }),
@@ -80,6 +81,7 @@ gulp.task('html', () => gulp.src('source/*.html')
   .pipe(posthtml([
     include(),
   ]))
+  .pipe(w3cjs())
   .pipe(htmlmin({
     collapseWhitespace: true,
     collapseInlineTagWhitespace: true,
